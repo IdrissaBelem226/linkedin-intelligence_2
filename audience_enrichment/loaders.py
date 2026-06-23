@@ -311,17 +311,29 @@ def load_registrants(filepath: str) -> pd.DataFrame:
         # Détecter automatiquement le séparateur (,  ou ;) et l'encodage
         df = _read_csv_auto(files[0])
 
-    missing = {"Nom", "Prénom"} - set(df.columns)
-    if missing:
+    # Détecter le format : français (Nom/Prénom) ou anglais (First Name/Last Name)
+    has_fr = {"Nom", "Prénom"}.issubset(set(df.columns))
+    has_en = {"First Name", "Last Name"}.issubset(set(df.columns))
+
+    if not has_fr and not has_en:
         raise KeyError(
-            f"Missing columns in registrants file: {missing}"
+            f"Missing columns in registrants file. "
+            f"Expected 'Nom'+'Prénom' (FR) or 'First Name'+'Last Name' (EN). "
+            f"Found: {list(df.columns)}"
         )
 
-    df["Name"] = (
-        df["Nom"].str.upper().str.strip()
-        + ", "
-        + df["Prénom"].str.strip()
-    )
+    if has_fr:
+        df["Name"] = (
+            df["Nom"].str.upper().str.strip()
+            + ", "
+            + df["Prénom"].str.strip()
+        )
+    else:
+        df["Name"] = (
+            df["Last Name"].str.upper().str.strip()
+            + ", "
+            + df["First Name"].str.strip()
+        )
 
     keep_cols = [
         "Email",
@@ -330,6 +342,7 @@ def load_registrants(filepath: str) -> pd.DataFrame:
         "Date d'inscription",
         "Company",
         "Job title",
+        "Position",  # format anglais Livestorm
     ]
     existing_cols = [c for c in keep_cols if c in df.columns]
     return df[existing_cols].reset_index(drop=True)
