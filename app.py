@@ -56,6 +56,11 @@ div[data-testid="stDownloadButton"] > button {
     background: white !important; color: #1a5c38 !important;
     border: 1px solid #a5d6a7 !important; font-weight: 600 !important;
 }
+button[data-testid="stBaseButton-headerNoPadding"] { display: none !important; }
+[data-testid="stToolbar"] { display: none !important; }
+[data-testid="stDecoration"] { display: none !important; }
+#MainMenu { display: none !important; }
+footer { display: none !important; }
 </style>
 """, unsafe_allow_html=True)
 
