@@ -63,6 +63,11 @@ for key, val in [("page","home"),("audience",None),("stats",None),("registrants"
     if key not in st.session_state:
         st.session_state[key] = val
 
+CONN_B64    = "Rmlyc3QgTmFtZSxMYXN0IE5hbWUsRW1haWwgQWRkcmVzcyxDb21wYW55LFBvc2l0aW9uLFVSTCxDb25uZWN0ZWQgT24KSmVhbixEdXBvbnQsai5kdXBvbnRAYXhhLmZyLEFYQSxEaXJlY3RldXIgdGVjaG5pcXVlLGh0dHBzOi8vbGlua2VkaW4uY29tL2luL2pkdXBvbnQsMDEgSmFuIDIwMjQKTWFyaWUsTWFydGluLG0ubWFydGluQGRldHJhbHl0aWNzLmZyLERldHJhbHl0aWNzLE1hbmFnZXIgYWN0dWFyaWFsLGh0dHBzOi8vbGlua2VkaW4uY29tL2luL21tYXJ0aW4sMDEgSmFuIDIwMjQKUGllcnJlLEJlcm5hcmQscC5iZXJuYXJkQHNjb3IuY29tLFNDT1IsQ2hhcmfDqSBkZSByw6lhc3N1cmFuY2UsaHR0cHM6Ly9saW5rZWRpbi5jb20vaW4vcGJlcm5hcmQsMDEgSmFuIDIwMjQKU29waGllLExlY2xlcmMscy5sZWNsZXJjQGFsbGlhbnouZnIsQWxsaWFueiBGcmFuY2UsQWN0dWFpcmUgc2VuaW9yLGh0dHBzOi8vbGlua2VkaW4uY29tL2luL3NsZWNsZXJjLDAxIEphbiAyMDI0ClRob21hcyxNb3JlYXUsdC5tb3JlYXVAbWFpZi5mcixNQUlGLFJlc3BvbnNhYmxlIHByaWNpbmcsaHR0cHM6Ly9saW5rZWRpbi5jb20vaW4vdG1vcmVhdSwwMSBKYW4gMjAyNApDYW1pbGxlLFBldGl0LGMucGV0aXRAbmV4aWFsb2cuZnIsTmV4aWFsb2csQ29uc3VsdGFudGUgYWN0dWFyaWVsbGUsaHR0cHM6Ly9saW5rZWRpbi5jb20vaW4vY3BldGl0LDAxIEphbiAyMDI0CkFudG9pbmUsRHVyYW5kLGEuZHVyYW5kQG9saXZlcnd5bWFuLmNvbSxPbGl2ZXIgV3ltYW4sU2VuaW9yIE1hbmFnZXIsaHR0cHM6Ly9saW5rZWRpbi5jb20vaW4vYWR1cmFuZCwwMSBKYW4gMjAyNApMdWNpZSxTaW1vbixsLnNpbW9uQGV0aGlhcy5iZSxFdGhpYXMsSGVhZCBvZiBBY3R1YXJpYWwsaHR0cHM6Ly9saW5rZWRpbi5jb20vaW4vbHNpbW9uLDAxIEphbiAyMDI0Ck5pY29sYXMsTGF1cmVudCxuLmxhdXJlbnRAYW9uLmZyLEFvbixSaXNrIGNvbnN1bHRhbnQsaHR0cHM6Ly9saW5rZWRpbi5jb20vaW4vbmxhdXJlbnQsMDEgSmFuIDIwMjQKRW1tYSxHaXJhcmQsZS5naXJhcmRAdWxiLmFjLmJlLFVuaXZlcnNpdMOpIGxpYnJlIGRlIGJydXhlbGxlcyxQcm9mZXNzZXVyIGVuIGFjdHVhcmlhdCxodHRwczovL2xpbmtlZGluLmNvbS9pbi9lZ2lyYXJkLDAxIEphbiAyMDI0Ckh1Z28sUm91eCxoLnJvdXhAYm5wcGFyaWJhcy5mcixCTlAgUGFyaWJhcyBDYXJkaWYsQWN0dWFpcmUgdmllLGh0dHBzOi8vbGlua2VkaW4uY29tL2luL2hyb3V4LDAxIEphbiAyMDI0CkFsaWNlLEJsYW5jLGEuYmxhbmNAbWFyc2guZnIsTWFyc2gsQnJva2VyIHNlbmlvcixodHRwczovL2xpbmtlZGluLmNvbS9pbi9hYmxhbmMsMDEgSmFuIDIwMjQKTWF4aW1lLEdhcm5pZXIsbS5nYXJuaWVyQGRldHJhbHl0aWNzLmZyLERldHJhbHl0aWNzLERhdGEgc2NpZW50aXN0IGFjdHVhcmllbCxodHRwczovL2xpbmtlZGluLmNvbS9pbi9tZ2FybmllciwwMSBKYW4gMjAyNApJbsOocyxDaGV2YWxpZXIsaS5jaGV2YWxpZXJAYWRkYWN0aXMuY29tLEFkZGFjdGlzLERpcmVjdHJpY2UgY29uc2VpbCxodHRwczovL2xpbmtlZGluLmNvbS9pbi9pY2hlcnZhbGllciwwMSBKYW4gMjAyNApSb21haW4sRmF1cmUsci5mYXVyZUBjcmVkaXRhZ3JpY29sZS5mcixDcsOpZGl0IEFncmljb2xlIEFzc3VyYW5jZXMsQ0VPLGh0dHBzOi8vbGlua2VkaW4uY29tL2luL3JmYXVyZSwwMSBKYW4gMjAyNApQYXVsaW5lLE1vcmVsLHAubW9yZWxAd3R3LmNvbSxXVFcsQWN0dWFpcmUgY29uc2VpbCxodHRwczovL2xpbmtlZGluLmNvbS9pbi9wbW9yZWwsMDEgSmFuIDIwMjQKSnVsaWVuLEFybmF1ZCxqLmFybmF1ZEBrYmMuYmUsS0JDLFJpc2sgTWFuYWdlcixodHRwczovL2xpbmtlZGluLmNvbS9pbi9qYXJuYXVkLDAxIEphbiAyMDI0CkNsYXJhLEJvbm5ldCxjLmJvbm5ldEBpc2ZhLmZyLFVuaXZlcnNpdMOpIGRlIEx5b24gLSBJU0ZBLMOJdHVkaWFudGUgbWFzdGVyIGFjdHVhcmlhdCxodHRwczovL2xpbmtlZGluLmNvbS9pbi9jYm9ubmV0LDAxIEphbiAyMDI0CkFsZXhpcyxQZXJyaW4sYS5wZXJyaW5AcWJlLmNvbSxRQkUgUmUsVW5kZXJ3cml0ZXIgcsOpYXNzdXJhbmNlLGh0dHBzOi8vbGlua2VkaW4uY29tL2luL2FwZXJyaW4sMDEgSmFuIDIwMjQKQ2hhcmxvdHRlLFJvdXNzZWF1LGMucm91c3NlYXVAc3VyYXZlbmlyLmZyLFN1cmF2ZW5pcixBbHRlcm5hbnRlIGFjdHVhcmlhdCxodHRwczovL2xpbmtlZGluLmNvbS9pbi9jcm91c3NlYXUsMDEgSmFuIDIwMjQK"
+CONGRES_B64 = "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"
+LIVE_B64    = "Tm9tLFByw6lub20sRW1haWwsQ29tcGFueSxKb2IgdGl0bGUsUGF5cyAoZGVwdWlzIElQKSxEYXRlIGQnaW5zY3JpcHRpb24KRFVQT05ULEplYW4sai5kdXBvbnRAYXhhLmZyLEFYQSxEaXJlY3RldXIgdGVjaG5pcXVlLEZyYW5jZSwyMDI2LTA1LTEwCk1BUlRJTixNYXJpZSxtLm1hcnRpbkBkZXRyYWx5dGljcy5mcixEZXRyYWx5dGljcyxNYW5hZ2VyIGFjdHVhcmlhbCxGcmFuY2UsMjAyNi0wNS0xMQpCRVJOQVJELFBpZXJyZSxwLmJlcm5hcmRAc2Nvci5jb20sU0NPUixSw6lhc3N1cmFuY2UsRnJhbmNlLDIwMjYtMDUtMTEKTEVDTEVSQyxTb3BoaWUscy5sZWNsZXJjQGFsbGlhbnouZnIsQWxsaWFueixBY3R1YWlyZSBzZW5pb3IsRnJhbmNlLDIwMjYtMDUtMTIKTU9SRUFVLFRob21hcyx0Lm1vcmVhdUBtYWlmLmZyLE1BSUYsUmVzcG9uc2FibGUgcHJpY2luZyxGcmFuY2UsMjAyNi0wNS0xMgpQRVRJVCxDYW1pbGxlLGMucGV0aXRAbmV4aWFsb2cuZnIsTmV4aWFsb2csQ29uc3VsdGFudGUsRnJhbmNlLDIwMjYtMDUtMTMKU0lNT04sTHVjaWUsbC5zaW1vbkBldGhpYXMuYmUsRXRoaWFzLEhlYWQgb2YgQWN0dWFyaWFsLEJlbGdpcXVlLDIwMjYtMDUtMTMKRFVNT05ULEZyw6lkw6lyaWMsZi5kdW1vbnRAZ3JvdXBhbWEuZnIsR3JvdXBhbWEsRGlyZWN0ZXVyIGfDqW7DqXJhbCxGcmFuY2UsMjAyNi0wNS0xNApIRU5SWSxJc2FiZWxsZSxpLmhlbnJ5QGFnaW5zdXJhbmNlLmJlLEFHIEluc3VyYW5jZSxBY3R1YWlyZSBlbiBjaGVmLEJlbGdpcXVlLDIwMjYtMDUtMTQKQkFSQklFUixTdMOpcGhhbmUscy5iYXJiaWVyQGRlbG9pdHRlLmZyLERlbG9pdHRlLFBhcnRuZXIsRnJhbmNlLDIwMjYtMDUtMTUKR0FSTklFUixNYXhpbWUsbS5nYXJuaWVyQGRldHJhbHl0aWNzLmZyLERldHJhbHl0aWNzLERhdGEgc2NpZW50aXN0LEZyYW5jZSwyMDI2LTA1LTE1CkNIRVZBTElFUixJbsOocyxpLmNoZXZhbGllckBhZGRhY3Rpcy5jb20sQWRkYWN0aXMsRGlyZWN0cmljZSBjb25zZWlsLEZyYW5jZSwyMDI2LTA1LTE2ClJPQkVSVCxEYW1pZW4sZC5yb2JlcnRAYWxsaWFuei5mcixBbGxpYW56LFZpY2UtUHLDqXNpZGVudCxGcmFuY2UsMjAyNi0wNS0xNgpCT05ORVQsQ2xhcmEsYy5ib25uZXRAaXNmYS5mcixJU0ZBLMOJdHVkaWFudGUsRnJhbmNlLDIwMjYtMDUtMTcKUk9VU1NFQVUsQ2hhcmxvdHRlLGMucm91c3NlYXVAc3VyYXZlbmlyLmZyLFN1cmF2ZW5pcixBbHRlcm5hbnRlIGFjdHVhcmlhdCxGcmFuY2UsMjAyNi0wNS0xNwpHQVJDSUEsQ2FybG9zLGMuZ2FyY2lhQG1hcGZyZS5lcyxNYXBmcmUsQWN0dWFpcmUsRXNwYWduZSwyMDI2LTA1LTE4ClNDSE1JRFQsS2xhdXMsay5zY2htaWR0QG11bmljaC1yZS5kZSxNdW5pY2ggUmUsVW5kZXJ3cml0ZXIsQWxsZW1hZ25lLDIwMjYtMDUtMTgKV0lMU09OLFNhcmFoLHMud2lsc29uQGxsb3lkcy5jb20sTGxveWQncyxCcm9rZXIsVUssMjAyNi0wNS0xOQo="
+
+
 def save_upload(f, suffix=""):
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
     tmp.write(f.read()); tmp.flush()
@@ -204,8 +209,274 @@ if st.session_state.page == "home":
         unsafe_allow_html=True,
     )
 
+elif st.session_state.page == "guide":
+
+    # Background semi-transparent
+    guide_bg = f"""
+    <style>
+    [data-testid="stSidebar"] { display: none; }
+    [data-testid="collapsedControl"] { display: none; }
+    [data-testid="stAppViewContainer"]::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-image: url('data:image/jpeg;base64,{BG_B64}');
+        background-size: cover;
+        background-position: center;
+        opacity: 0.15;
+        z-index: 0;
+    }
+    .block-container { position: relative; z-index: 1; max-width: 860px !important; margin: 0 auto; }
+    </style>
+    """
+    st.markdown(guide_bg, unsafe_allow_html=True)
+
+    # Navbar guide
+    col_g1, col_g2 = st.columns([6, 1])
+    with col_g1:
+        nav_guide = f"""
+        <div class="navbar">
+            <img src="data:image/png;base64,{LOGO_B64}"
+                 style="height:32px;filter:brightness(0) invert(1);" alt="logo">
+            <span class="navbar-sep">›</span>
+            <span class="navbar-page">Guide d'utilisation</span>
+        </div>
+        """
+        st.markdown(nav_guide, unsafe_allow_html=True)
+    with col_g2:
+        if st.button("← Retour"):
+            st.session_state.page = "app"
+            st.rerun()
+
+    # ── Header ────────────────────────────────────────────────────────────
+    st.markdown("""
+    <div style="background:#1a5c38;border-radius:12px;padding:28px 32px;margin-bottom:24px;">
+        <div style="color:#a5d6a7;font-size:11px;font-weight:700;text-transform:uppercase;
+                    letter-spacing:.1em;margin-bottom:8px;">Documentation</div>
+        <div style="color:white;font-size:24px;font-weight:800;margin-bottom:8px;">
+            Guide d'utilisation
+        </div>
+        <div style="color:#c8e6c9;font-size:14px;line-height:1.6;">
+            Préparez vos fichiers correctement pour obtenir les meilleurs résultats
+            de matching et de classification.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── Pipeline ──────────────────────────────────────────────────────────
+    st.markdown("### Pipeline")
+    st.markdown("""
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+                border:1px solid #dcedc8;border-radius:10px;overflow:hidden;
+                background:white;margin-bottom:24px;">
+        <div style="padding:16px;border-right:1px solid #e8f5e9;">
+            <div style="width:28px;height:28px;background:#e8f5e9;border-radius:7px;
+                        display:flex;align-items:center;justify-content:center;
+                        font-weight:700;color:#1a5c38;font-size:13px;margin-bottom:8px;">①</div>
+            <div style="font-size:13px;font-weight:700;color:#1a5c38;">Charger</div>
+            <div style="font-size:11px;color:#888;margin-top:3px;">LinkedIn + Congrès + Livestorm</div>
+        </div>
+        <div style="padding:16px;border-right:1px solid #e8f5e9;">
+            <div style="width:28px;height:28px;background:#e8f5e9;border-radius:7px;
+                        display:flex;align-items:center;justify-content:center;
+                        font-weight:700;color:#1a5c38;font-size:13px;margin-bottom:8px;">②</div>
+            <div style="font-size:13px;font-weight:700;color:#1a5c38;">Matcher</div>
+            <div style="font-size:11px;color:#888;margin-top:3px;">Rapprochement par nom</div>
+        </div>
+        <div style="padding:16px;border-right:1px solid #e8f5e9;">
+            <div style="width:28px;height:28px;background:#e8f5e9;border-radius:7px;
+                        display:flex;align-items:center;justify-content:center;
+                        font-weight:700;color:#1a5c38;font-size:13px;margin-bottom:8px;">③</div>
+            <div style="font-size:13px;font-weight:700;color:#1a5c38;">Enrichir</div>
+            <div style="font-size:11px;color:#888;margin-top:3px;">Poste, entreprise, LinkedIn</div>
+        </div>
+        <div style="padding:16px;">
+            <div style="width:28px;height:28px;background:#e8f5e9;border-radius:7px;
+                        display:flex;align-items:center;justify-content:center;
+                        font-weight:700;color:#1a5c38;font-size:13px;margin-bottom:8px;">④</div>
+            <div style="font-size:13px;font-weight:700;color:#1a5c38;">Filtrer</div>
+            <div style="font-size:11px;color:#888;margin-top:3px;">Décideurs par secteur</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── Fichiers ──────────────────────────────────────────────────────────
+    tab_li, tab_co, tab_lv, tab_match = st.tabs([
+        "🔗 LinkedIn", "📋 Congrès", "☁️ Livestorm", "🎯 Matching"
+    ])
+
+    with tab_li:
+        st.markdown("""
+        <div style="background:#f1f8e9;border-left:4px solid #4caf50;border-radius:0 8px 8px 0;
+                    padding:14px 16px;margin-bottom:16px;">
+            <b style="color:#1a5c38;">Comment obtenir ce fichier ?</b><br>
+            <span style="font-size:13px;color:#555;">
+            LinkedIn → <i>Moi</i> → <i>Paramètres et confidentialité</i> →
+            <i>Confidentialité des données</i> → <i>Obtenir une copie de vos données</i> →
+            cocher <b>Connexions</b> → Demander l'archive → fichier reçu par email sous 10 min.
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("**Colonnes attendues**")
+        import pandas as pd
+        df_li = pd.DataFrame([
+            ["First Name",   "✅ Obligatoire", "Jean",                        "Prénom"],
+            ["Last Name",    "✅ Obligatoire", "Dupont",                      "Nom de famille"],
+            ["Email Address","❌ Optionnel",   "j.dupont@axa.fr",             "Email LinkedIn"],
+            ["Company",      "❌ Optionnel",   "AXA",                         "Entreprise actuelle"],
+            ["Position",     "❌ Optionnel",   "Directeur technique",         "Poste actuel"],
+            ["URL",          "❌ Optionnel",   "https://linkedin.com/in/jd",  "Lien profil"],
+            ["Connected On", "❌ Optionnel",   "01 Jan 2024",                 "Date de connexion"],
+        ], columns=["Nom de colonne", "Statut", "Exemple", "Description"])
+        st.dataframe(df_li, use_container_width=True, hide_index=True)
+
+        st.markdown("""
+        <div style="background:#fff9c4;border-left:4px solid #f9a825;border-radius:0 8px 8px 0;
+                    padding:12px 16px;margin-top:12px;font-size:13px;">
+            <b>Format accepté :</b> <code>.csv</code> ou <code>.xlsx</code> —
+            séparateur <code>,</code> ou <code>;</code> détecté automatiquement.
+            Plusieurs fichiers peuvent être uploadés simultanément.
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("**Exemple de fichier**")
+        st.download_button(
+            "⬇️  Télécharger Connections_exemple.csv",
+            data=base64.b64decode(CONN_B64),
+            file_name="Connections_exemple.csv",
+            mime="text/csv",
+        )
+
+    with tab_co:
+        st.markdown("""
+        <div style="background:#f1f8e9;border-left:4px solid #4caf50;border-radius:0 8px 8px 0;
+                    padding:14px 16px;margin-bottom:16px;">
+            <b style="color:#1a5c38;">Format du fichier</b><br>
+            <span style="font-size:13px;color:#555;">
+            Fichier Excel <code>.xlsx</code> avec une feuille nommée
+            <b>exactement</b> <code>Résumé</code> (avec accent).
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("**Colonnes attendues**")
+        df_co = pd.DataFrame([
+            ["Name",      "✅ Obligatoire", "DUPONT, Jean",     "Format : NOM (majuscules), Prénom"],
+            ["Job",       "✅ Obligatoire", "Directeur général","Intitulé de poste"],
+            ["Compagnie", "✅ Obligatoire", "Groupama",         "Nom de l'entreprise"],
+        ], columns=["Nom de colonne", "Statut", "Exemple", "Description"])
+        st.dataframe(df_co, use_container_width=True, hide_index=True)
+
+        st.markdown("""
+        <div style="background:#fff3e0;border-left:4px solid #ef6c00;border-radius:0 8px 8px 0;
+                    padding:12px 16px;margin-top:12px;font-size:13px;">
+            <b>⚠️ Point critique :</b> la colonne <code>Name</code> doit être au format
+            <code>NOM, Prénom</code> — le nom en MAJUSCULES suivi d'une virgule et du prénom.
+            Exemple : <code>DUPONT, Jean</code> et non <code>Jean Dupont</code>.
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("**Exemple de fichier**")
+        st.download_button(
+            "⬇️  Télécharger Congrès_exemple.xlsx",
+            data=base64.b64decode(CONGRES_B64),
+            file_name="Congres_exemple.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+
+    with tab_lv:
+        st.markdown("""
+        <div style="background:#f1f8e9;border-left:4px solid #4caf50;border-radius:0 8px 8px 0;
+                    padding:14px 16px;margin-bottom:16px;">
+            <b style="color:#1a5c38;">Comment obtenir ce fichier ?</b><br>
+            <span style="font-size:13px;color:#555;">
+            Livestorm → votre événement → <i>Participants</i> → <i>Exporter</i> →
+            fichier CSV téléchargé automatiquement.
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("**Colonnes attendues**")
+        df_lv = pd.DataFrame([
+            ["Nom",                 "✅ Obligatoire", "DUPONT",      "Nom de famille (sera mis en majuscules)"],
+            ["Prénom",              "✅ Obligatoire", "Jean",        "Prénom"],
+            ["Email",               "❌ Optionnel",   "j@axa.fr",   "Adresse email"],
+            ["Company",             "❌ Optionnel",   "AXA",        "Entreprise"],
+            ["Job title",           "❌ Optionnel",   "Directeur",  "Intitulé de poste"],
+            ["Pays (depuis IP)",    "❌ Optionnel",   "France",     "Pays de connexion"],
+            ["Date d'inscription",  "❌ Optionnel",   "10/05/2026", "Date d'inscription"],
+        ], columns=["Nom de colonne", "Statut", "Exemple", "Description"])
+        st.dataframe(df_lv, use_container_width=True, hide_index=True)
+
+        st.markdown("""
+        <div style="background:#fff9c4;border-left:4px solid #f9a825;border-radius:0 8px 8px 0;
+                    padding:12px 16px;margin-top:12px;font-size:13px;">
+            <b>Format accepté :</b> <code>.csv</code> ou <code>.xlsx</code> —
+            séparateur <code>,</code> ou <code>;</code> détecté automatiquement.
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("**Exemple de fichier**")
+        st.download_button(
+            "⬇️  Télécharger Livestorm_exemple.csv",
+            data=base64.b64decode(LIVE_B64),
+            file_name="Livestorm_exemple.csv",
+            mime="text/csv",
+        )
+
+    with tab_match:
+        st.markdown("### Le score de matching")
+        st.markdown("""
+        <div style="background:white;border:1px solid #dcedc8;border-radius:10px;
+                    padding:20px;margin-bottom:16px;">
+            <p style="font-size:14px;color:#333;line-height:1.7;">
+            Le matching compare les noms des <b>inscrits Livestorm</b> avec les noms
+            de votre <b>table de contacts</b> (LinkedIn + Congrès).
+            Il utilise un algorithme de similarité de chaînes (<i>fuzzy matching</i>)
+            qui tolère les fautes de frappe, les accents manquants et les variantes de noms.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        df_score = pd.DataFrame([
+            ["100", "Correspondance exacte",    "DUPONT, Jean = DUPONT, Jean",    "✅ Parfait"],
+            ["90–99","Très proche",             "DUPONT, Jean ≈ DUPONT, Jeann",   "✅ Fiable"],
+            ["80–89","Proche",                  "DUPONT, Jean ≈ DUPON, Jean",     "⚠️ À vérifier"],
+            ["< 80", "Trop différent",          "DUPONT, Jean ≠ MARTIN, Sophie",  "❌ Rejeté"],
+        ], columns=["Score", "Interprétation", "Exemple", "Résultat"])
+        st.dataframe(df_score, use_container_width=True, hide_index=True)
+
+        st.markdown("""
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+            <div style="background:#e8f5e9;border-radius:8px;padding:14px;">
+                <b style="color:#1a5c38;">Monter le seuil (ex: 95)</b><br>
+                <span style="font-size:13px;color:#555;">
+                Moins de matchs mais plus fiables.
+                Recommandé si beaucoup de faux positifs.
+                </span>
+            </div>
+            <div style="background:#fff9c4;border-radius:8px;padding:14px;">
+                <b style="color:#e65100;">Baisser le seuil (ex: 80)</b><br>
+                <span style="font-size:13px;color:#555;">
+                Plus de matchs mais risque d'erreurs.
+                Recommandé si le taux de matching est faible.
+                </span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div style="background:#fff3e0;border-left:4px solid #ef6c00;border-radius:0 8px 8px 0;
+                    padding:12px 16px;margin-top:16px;font-size:13px;">
+            <b>Conseil :</b> Le seuil par défaut de <b>90</b> offre le meilleur équilibre
+            précision / rappel pour des noms français et belges.
+        </div>
+        """, unsafe_allow_html=True)
+
+
 else:
-    col_nav1, col_nav2 = st.columns([6, 1])
+    col_nav1, col_nav2, col_nav3 = st.columns([6, 1, 1])
     with col_nav1:
         nav_html = f"""
         <div class="navbar">
@@ -217,6 +488,10 @@ else:
         """
         st.markdown(nav_html, unsafe_allow_html=True)
     with col_nav2:
+        if st.button("📖 Guide"):
+            st.session_state.page = "guide"
+            st.rerun()
+    with col_nav3:
         if st.button("← Accueil"):
             st.session_state.page = "home"
             st.rerun()
